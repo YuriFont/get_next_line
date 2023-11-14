@@ -6,7 +6,7 @@
 /*   By: yufonten <yufonten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 22:34:00 by yufonten          #+#    #+#             */
-/*   Updated: 2023/11/13 23:40:56 by yufonten         ###   ########.fr       */
+/*   Updated: 2023/11/13 23:46:16 by yufonten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	copy_str_list(t_list *list, char *str)
 	str[j] = '\0';
 }
 
-void	clear_list(t_list **list, t_list *clean_list, char *buf)
+void	clear_list(t_list **list, t_list *clean_node, char *buf)
 {
 	t_list	*tmp;
 
