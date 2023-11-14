@@ -6,7 +6,7 @@
 /*   By: yufonten <yufonten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 21:47:42 by yufonten          #+#    #+#             */
-/*   Updated: 2023/11/14 00:29:09 by yufonten         ###   ########.fr       */
+/*   Updated: 2023/11/14 00:35:32 by yufonten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ char	*get_next_line(int fd)
 	static t_list	*list;
 	char			*next_line;
 
-	list = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (NULL);
 	creat_list(&list, fd);
