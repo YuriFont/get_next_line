@@ -1,39 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yufonten <yufonten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/13 22:34:00 by yufonten          #+#    #+#             */
-/*   Updated: 2023/11/13 22:39:42 by yufonten         ###   ########.fr       */
+/*   Created: 2023/11/13 21:24:51 by yufonten          #+#    #+#             */
+/*   Updated: 2023/11/13 21:38:36 by yufonten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <string.h>
 
-int	len_to_newline(t_list *list)
+int	main(void)
 {
-	int	i;
-	int	len;
+	int	fd;
+	int	char_read;
+	char	buff[400000];
 
-	if (!list)
-		return (0);
-	len = 0;
-	while (list)
+	fd = open("test.txt", O_RDONLY | O_CREAT);
+	while ((char_read = read(fd, buff, 5)))
 	{
-		i = 0;
-		while (list->buff[i] != '\0')
-		{
-			if (list->buff[i] == '\n')
-			{
-				len++;
-				return(len);
-			}
-			len++;
-			i++;
-		}
-		list = list->next;
+		buff[char_read] = '\0';
+		printf("%s\n", buff);
 	}
-	return (len);
+	return (0);
 }

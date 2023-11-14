@@ -5,101 +5,75 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yufonten <yufonten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/08 09:56:27 by yufonten          #+#    #+#             */
-/*   Updated: 2023/11/09 18:25:48 by yufonten         ###   ########.fr       */
+/*   Created: 2023/11/13 21:47:42 by yufonten          #+#    #+#             */
+/*   Updated: 2023/11/13 22:33:46 by yufonten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_next_line(int fd, char *backup)
+void	put_node(t_list **list, char *buff)
 {
-	char	*buf;
-	int		n_rd;
+	t_list	*last_node;
+	t_list	*new_node;
 
-	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf)
-		return (NULL);
-	while (!ft_strchr(backup, '\n') && n_rd != 0)
+	last_node = find_last_node(*list);
+	new_node = malloc(sizeof(t_list));
+	if (!new_node)
+		return ;
+	if (last_node == NULL)
+		*list = new_node;
+	else
+		last_node->next = new_node;
+	new_node->buff = buff;
+	new_node->next = NULL;
+}
+
+void	creat_list(t_list **list, int fd)
+{
+	int		count_read;
+	char	*buff;
+
+	while (!found_newtline(*list))
 	{
-		n_rd = read(fd, buf, BUFFER_SIZE);
-		if (n_rd == -1)
+		buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		if (!buff)
+			return ;
+		count_read = read(fd, buff, BUFFER_SIZE);
+		if (!count_read)
 		{
-			free(buf);
-			return (NULL);
+			free(buff);
+			return ;
 		}
-		buf[n_rd] = '\0';
-		backup = ft_strjoin(backup, buf);
+		buff[count_read] = '\0';
+		put_node(list, buff);
 	}
-	free(buf);
-	return (backup);
 }
 
-char	*ft_get_line(char *backup)
+char	*get_line(t_list *list)
 {
-	int		i;
-	char	*r;
+	int		str_len;
+	char	*next_str;
 
-	i = 0;
-	if (!backup)
+	if (!list)
 		return (NULL);
-	while (backup[i] != '\0' && backup[i] != '\n')
-		i++;
-	r = malloc(sizeof(char) * (i + 2));
-	if (!r)
+	str_len = len_to_newline(list);
+	next_str = malloc(sizeof(char) * (str_len + 1));
+	if (!next_line)
 		return (NULL);
-	i = 0;
-	while (backup[i] != '\0' && backup[i] != '\n')
-	{
-		r[i] = backup[i];
-		i++;
-	}
-	if (backup[i] == '\n')
-		r[i] = '\n';
-	r[i] = '\0';
-	return (r);
-}
-
-char	*ft_reset_backup(char *backup)
-{
-	int		i;
-	int		j;
-	char	*r;
-
-	i = 0;
-	while (backup[i] != '\0' && backup[i] != '\n')
-		i++;
-	if (!backup[i])
-	{
-		free(backup);
-		return (NULL);
-	}
-	r = malloc(sizeof(char) * (ft_strlen(backup) - i + 1));
-	if (!r)
-	{
-		free(backup);
-		return (NULL);
-	}
-	i++;
-	j = 0;
-	while (backup[i] != '\0')
-		r[j++] = backup[i++];
-	r[j] = '\0';
-	free(backup);
-	return (r);
+	copy_str_list(list, next_str);
+	return (next_str);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*backup;
-	char		*line;
+	static t_list	*list;
+	char			*next_line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (NULL);
-	backup = ft_next_line(fd, backup);
-	if (!backup)
+	creat_list(&list, fd);
+	if (!list)
 		return (NULL);
-	line = ft_get_line(backup);
-	backup = ft_reset_backup(backup);
-	return (line);
+	next_line = get_line(list);
 }
