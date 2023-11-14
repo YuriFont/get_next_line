@@ -6,7 +6,7 @@
 /*   By: yufonten <yufonten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 21:47:42 by yufonten          #+#    #+#             */
-/*   Updated: 2023/11/13 23:30:40 by yufonten         ###   ########.fr       */
+/*   Updated: 2023/11/14 00:29:09 by yufonten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	creat_list(t_list **list, int fd)
 	int		count_read;
 	char	*buf;
 
-	while (!found_newtline(*list))
+	while (!found_newline(*list))
 	{
 		buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		if (!buf)
@@ -59,7 +59,7 @@ char	*get_line(t_list *list)
 		return (NULL);
 	str_len = len_to_newline(list);
 	next_str = malloc(sizeof(char) * (str_len + 1));
-	if (!next_line)
+	if (!next_str)
 		return (NULL);
 	copy_str_list(list, next_str);
 	return (next_str);
@@ -82,8 +82,8 @@ void	clean_list(t_list **list)
 	j = 0;
 	while (last_node->buf[i] && last_node->buf[i] != '\n')
 		i++;
-	while (last_node->buf[i] != '\0')
-		buf[j++] = last_node->buf[i++];
+	while (last_node->buf[i] != '\0' && last_node->buf[++i] != '\0')
+		buf[j++] = last_node->buf[i];
 	buf[j] = '\0';
 	clean_node->buf = buf;
 	clean_node->next = NULL;
@@ -95,6 +95,7 @@ char	*get_next_line(int fd)
 	static t_list	*list;
 	char			*next_line;
 
+	list = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (NULL);
 	creat_list(&list, fd);

@@ -6,7 +6,7 @@
 /*   By: yufonten <yufonten@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 22:34:00 by yufonten          #+#    #+#             */
-/*   Updated: 2023/11/13 23:46:16 by yufonten         ###   ########.fr       */
+/*   Updated: 2023/11/14 00:23:37 by yufonten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	found_newline(t_list *list)
 	while (list)
 	{
 		i = 0;
-		while (list->buf[i] != '\0')
+		while (list->buf[i] != '\0' && i < BUFFER_SIZE)
 		{
 			if (list->buf[i] == '\n')
 				return (1);
@@ -113,7 +113,7 @@ void	clear_list(t_list **list, t_list *clean_node, char *buf)
 		*list = clean_node;
 	else
 	{
-		free(clean_node->buf);
+		free(buf);
 		free(clean_node);
 	}
 }
